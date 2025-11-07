@@ -7,24 +7,30 @@ import Logout from "./Logout.js"
 
 export const filteredBills = (data, status) => {
   return (data && data.length) ?
-    data.filter(bill => {
-      let selectCondition
+    data
+      .filter(bill => {
+        let selectCondition
 
-      // in jest environment
-      if (typeof jest !== 'undefined') {
-        selectCondition = (bill.status === status)
-      }
-      /* istanbul ignore next */
-      else {
-        // in prod environment
-        const userEmail = JSON.parse(localStorage.getItem("user")).email
-        selectCondition =
-          (bill.status === status) &&
-          ![...USERS_TEST, userEmail].includes(bill.email)
-      }
+        // in jest environment
+        if (typeof jest !== 'undefined') {
+          selectCondition = (bill.status === status)
+        }
+        /* istanbul ignore next */
+        else {
+          // in prod environment
+          const userEmail = JSON.parse(localStorage.getItem("user")).email
+          selectCondition =
+            (bill.status === status) &&
+            ![...USERS_TEST, userEmail].includes(bill.email)
+        }
 
-      return selectCondition
-    }) : []
+        return selectCondition
+      })
+      .sort((a, b) => {
+        const timeA = a && a.date ? new Date(a.date).getTime() : 0
+        const timeB = b && b.date ? new Date(b.date).getTime() : 0
+        return timeB - timeA
+      }) : []
 }
 
 export const card = (bill) => {
