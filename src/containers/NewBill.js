@@ -21,7 +21,6 @@ export default class NewBill {
     const input = this.document.querySelector(`input[data-testid="file"]`)
     const file = input.files && input.files[0]
     if (!file) return
-    // jsdom ne permet pas de définir un faux chemin dans value, on utilise le nom du fichier
     const fileName = file.name
     const fileExtension = fileName.split('.').pop().toLowerCase()
     if (!authorizedExtensions.includes(fileExtension)) {
