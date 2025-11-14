@@ -96,14 +96,15 @@ export default class {
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
     if (this.counter % 2 === 0) {
       bills.forEach(b => {
-        $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
+        // apply style to all duplicates of a same bill across multiple lists
+        $(`[data-testid='open-bill${b.id}']`).css({ background: '#0D5AE5' })
       })
-      $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
+      $(`[data-testid='open-bill${bill.id}']`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
     } else {
-      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
+  $(`[data-testid='open-bill${bill.id}']`).css({ background: '#0D5AE5' })
 
       $('.dashboard-right-container div').html(`
         <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
@@ -152,7 +153,10 @@ export default class {
     }
 
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+      // bind click handler to all instances (if bill appears in multiple status lists simultaneously)
+      $(`[data-testid='open-bill${bill.id}']`).each((_, el) => {
+        $(el).off('click').on('click', (e) => this.handleEditTicket(e, bill, bills))
+      })
     })
 
     return bills

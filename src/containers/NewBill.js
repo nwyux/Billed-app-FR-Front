@@ -17,9 +17,20 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const authorizedExtensions = ['jpg', 'jpeg', 'png']
+    const input = this.document.querySelector(`input[data-testid="file"]`)
+    const file = input.files && input.files[0]
+    if (!file) return
+    // jsdom ne permet pas de définir un faux chemin dans value, on utilise le nom du fichier
+    const fileName = file.name
+    const fileExtension = fileName.split('.').pop().toLowerCase()
+    if (!authorizedExtensions.includes(fileExtension)) {
+      // réinitialiser pour empêcher un envoi ultérieur invalide
+      input.value = ''
+      alert('Seuls les fichiers JPG, JPEG et PNG sont autorisés.')
+      return
+    }
+
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)

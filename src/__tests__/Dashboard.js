@@ -89,6 +89,21 @@ describe('Given I am connected as an Admin', () => {
       await waitFor(() => screen.getByTestId(`open-billBeKy5Mo4jkmdfPGYpTxZ`) )
       expect(screen.getByTestId(`open-billBeKy5Mo4jkmdfPGYpTxZ`)).toBeTruthy()
     })
+    test('Then, clicking again on the same arrow collapses the list (false branch)', async () => {
+      const onNavigate = (pathname) => { document.body.innerHTML = ROUTES({ pathname }) }
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({ type: 'Admin' }))
+      document.body.innerHTML = DashboardUI({ data: { bills } })
+      const dashboard = new Dashboard({ document, onNavigate, store: null, bills, localStorage: window.localStorage })
+      const icon1 = screen.getByTestId('arrow-icon1')
+      // open
+      userEvent.click(icon1)
+      await waitFor(() => screen.getByTestId(`open-bill47qAXb6fIm2zOKkLzMro`))
+      expect(screen.getByTestId(`open-bill47qAXb6fIm2zOKkLzMro`)).toBeTruthy()
+      // close
+      userEvent.click(icon1)
+      expect(screen.queryByTestId(`open-bill47qAXb6fIm2zOKkLzMro`)).toBeNull()
+    })
   })
 
   describe('When I am on Dashboard page and I click on edit icon of a card', () => {
