@@ -2,6 +2,10 @@ import { ROUTES_PATH } from '../constants/routes.js'
 import { formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
+function getAllElementsForIconEye() {
+  return document.querySelectorAll(`div[data-testid="icon-eye"]`);
+}
+
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document
@@ -9,7 +13,8 @@ export default class {
     this.store = store
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
-    const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
+    const iconEye = getAllElementsForIconEye()
+
     if (iconEye) iconEye.forEach(icon => {
       icon.addEventListener('click', () => this.handleClickIconEye(icon))
     })
